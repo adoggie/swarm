@@ -1,0 +1,8 @@
+{
+	"status":0,
+	"result":{
+		"uid":1,
+		"sid":"abc"
+		},
+	"msg":"Email address or password is incorrect.please try again!"
+}

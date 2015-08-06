@@ -1,0 +1,78 @@
+
+mongodb:
+  host: s201
+  port: 27017
+  user:
+  passwd:
+  database: sns
+
+redis:
+  host: s201
+  port:
+  user:
+  passwd:
+
+postgresql:
+  dbname: swarm
+  host: s203
+  port: 5432
+  user: postgres
+  passwd: 111111
+
+
+mobile_api_server:
+  http:
+    host:
+    port: 16001
+    ssl: false
+    keyfile: /home/ssl/server.key
+    certfile: /home/ssl/server.crt
+  mongodb:  mongodb
+  postgresql: postgresql
+  redis: redis
+  log:
+    stdout: true
+    file: /var/api_server.log
+    dgram: localhost:9901
+  app_bind_uri: http://s205:16003/WEBAPI/connector/app-account/event/bind
+  job_server_data_analyses_uri: http://s189:16002/WEBAPI/jobserver/data/analyses
+
+job_server:
+  http:
+    host:
+    port: 16002
+    ssl: false
+    keyfile: /home/ssl/server.key
+    certfile: /home/ssl/server.crt
+  log:
+    stdout: true
+    file: /var/jobserver.log
+    dgram: localhost:9900
+  mongodb:  mongodb
+  postgresql: postgresql
+  redis: redis
+  watch_time_interval: 10  #
+  max_job_lifetime: 10  # default is 10 hours.
+
+  callback_uri: http://s189:16002/WEBAPI/jobserver/callback
+
+  score_board:
+    max_life_time: 360    #  minutes , will be removed automatically by redis
+
+  connector_enable: false
+  backend_service_uri:
+    connector: http://s205:8800/desk/WEBAPI/connector
+    datacollector: http://localhost:16004/WEBAPI/datacollector
+  acs_data_analyses_uri: http://s205:12345/WEBAPI/acs/data/analysis
+
+
+hippo:
+  smtp:
+    smtp_host: smtp.163.com
+    smtp_port: 25
+    user: 13916624477
+    password: jqxxqjcbtjsmzwdh
+    mail_from: 13916624477@163.com
+
+  idenfity_image:
+    key_prefix: 'sing_image'

@@ -1,0 +1,14 @@
+module.exports={
+	userid:{param:'userid',title:''},
+	username:{param:"username",title:'UserName'},
+	aliasname:{param:"aliasname",title:'AliasName'},
+	lastname:{param:"lastname",title:'LastName'},
+	depname:{param:"depname",title:'Department'},
+	rolename:{param:"rolename",title:'Role'},
+	sysrolename:{param:"sysrolename",title:'SystemRole'},
+	firstname:{param:"firstname",title:'FirstName'},
+	middlename:{param:"middlename",title:'MiddleName'},
+	roleid:{param:"roleid",title:''},
+	depid:{param:"depid",title:''},
+	active:{param:'active',title:'Active',type:'checkbox'},
+};

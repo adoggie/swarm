@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fx.desk.mapper.YhMapper">
+
+	<resultMap type="orgUserLogin" id="orgUserLogin">
+		<id property="id" column="id" />
+		<result property="userId" column="user_id" />
+		<result property="userName" column="user_name" />
+		<result property="userType" column="user_type" />
+		<result property="domain" column="domain" />
+		<result property="sid" column="sid" />
+		<result property="loginTime" column="login_time"  />
+	</resultMap>
+
+	<select id="find" resultType="int">
+		SELECT count(1) from core_orguserappconfig;
+	</select>
+	<insert id="addOrgUserLogin" parameterType="java.util.Map">
+		INSERT INTO core_log_orguserlogin(
+			user_id,
+			user_name,
+			user_type,
+			domain,
+			sid,
+			login_time
+		)
+		VALUES(
+			#{userId},#{userName},#{userType},#{domain},#{sid},current_timestamp
+		);
+	</insert>
+	<select id="getOrgUserLogin" resultMap="orgUserLogin" parameterType="int">
+		SELECT id,user_id,user_name,user_type,domain,login_time FROM core_log_orguserlogin
+		WHERE user_id = #{userId} ORDER BY id DESC LIMIT 1;
+	</select>
+</mapper>

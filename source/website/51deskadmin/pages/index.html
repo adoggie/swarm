@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>51desk-admin-index</title>
+	<link rel="stylesheet" href="../src/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../src/themes/bootstrap/easyui.css">
+	<link rel="stylesheet" href="../src/themes/icon.css">
+	<link rel="stylesheet" href="../src/css/main.css">
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="main-header">
+			<div class="logo"><span>51Desk admin</span></div>
+		</div>
+		<div class="main-content">
+			<div id="main_tab" class="easyui-tabs" style="width:100%;">
+			    <div title="User Info" data-options="href:'userinfo.html'">
+			    </div>
+			    <div title="Integration" data-options="href:'intergration.html'">
+			    </div>
+			    <div title="Layout" data-options="href:'layout.html'">
+			    </div>
+				 <div title="Setting" data-options="href:'setting.html'">
+			    </div>
+			</div>
+		</div>
+	</div>
+	<script src="../src/scripts/jquery.min.js"></script>
+	<script src="../src/scripts/jquery.easyui.min.js"></script>
+	<script src="../src/scripts/utils.js"></script>
+	<script>
+		$(function(){
+			var height=$.getContentHeight()-50;
+			$('#main_tab').tabs({
+				height:height,
+				tabPosition:"left",
+			    border:false,
+			    onSelect:function(title){
+			        
+			    }
+			});
+		})
+		
+	</script>
+</body>
+</html>

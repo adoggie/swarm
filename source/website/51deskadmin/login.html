@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>51desk-admin-login</title>
+	<link rel="stylesheet" href="src/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="src/css/main.css" />
+</head>
+<body>
+	<div id="app" class="container-fluid">
+		<div>
+			<div class="login_header"></div>
+			<form  class="login_form form">
+				<div class="login_logo center-block"></div>
+				<div class="form-group">
+					<label class="sr-only control-label" for="userName">
+						<span >username</span>
+					</label>
+					<input type="text" id="userName" placeholder="Username" label="username" value="" class="form-control">
+				</div>
+				<div class="form-group">
+					<label class="sr-only control-label" for="password">
+						<span >password</span>
+					</label>
+					<input type="password" id="password" placeholder="Password" label="password" value="" class="form-control">
+				</div>
+				<span></span>
+				<label class="checkbox-inline" for="rembercheck">
+					<input type="checkbox" id="rembercheck" label="Save username" class="">
+					<span>Save username</span>
+				</label>
+				<a style="float:right;margin-bottom:10px;cursor:pointer;">Forgot Password?</a>
+				<button class="btn btn-default btn-block" type="button" onclick="loginHandle(this)">Login</button>
+				<span style="color:red;"></span>
+			</form>
+		</div>
+	</div>
+	<script src="src/scripts/jquery.min.js"></script>
+	<script src="src/scripts/utils.js"></script>
+	<script>
+		$(function(){
+			var username=$.getCookie("username"),savename=$.getCookie("savename");
+			if(savename == 1){
+				$("#userName").val(username);
+			}
+		});
+		function loginHandle(obj){
+			var usernameobj=$("#userName"),username=usernameobj.val(),passwordobj=$("#password"),password=passwordobj.val();
+			if(!username){
+				usernameobj.parent().addClass("has-error");
+			}else{
+				usernameobj.parent().removeClass("has-error");
+				if(!password){
+					passwordobj.parent().addClass("has-error");
+				}else{
+					passwordobj.parent().removeClass("has-error");
+					if($("#rembercheck").is(":checked")){
+						$.setCookie("username",username);
+						$.setCookie("savename",1);
+					}else{
+						$.setCookie("savename",0);
+					}
+					//$.post()
+					$.setCookie("online",1);
+					location.href="pages/index.html";
+				}
+			}
+		}
+	</script>
+</body>
+</html>

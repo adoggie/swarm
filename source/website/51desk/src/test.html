@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<button id="test">test </button>
+	 <script type="text/javascript" src="/51desk/src/jquery/jquery-1.11.3.min.js"></script>
+	 <script type="text/javascript">
+	 	$("#test").click(function(){
+	 		var url="http://192.168.36.62:8800/desk/login/check.do";
+	 		$.post(url,{user:"111",password:'ddd',domain:""},function(resp){
+	 			if(resp.status == 0){
+	 				alert("ok");
+	 			}
+	 		})	
+	 	})
+	 </script>
+</body>
+</html>

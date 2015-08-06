@@ -1,0 +1,104 @@
+1.服务名称：
+	1. MobileServer
+	2. Jobserver
+	
+
+2.Python环境
+	需安装的软件包
+
+	django-1.6.5.tar.gz
+	djangorestframework-3.1.2.tar.gz
+	gevent-1.0.tar.gz
+	gevent-psycopg2-0.0.3.tar.gz
+	greenlet-0.4.2.zip
+	psycogreen-1.0.tar.gz
+	psycopg2-2.5.tar.gz
+	pycrypto-2.6.1.tar.gz
+	pycrypto-on-pypi-2.3.tar.gz
+	pymongo-3.0.3.tar.gz
+	PyYAML-3.11.tar.gz
+	redis-2.9.1.tar.gz
+	tornado-4.2.tar.gz
+
+
+3. 运行参数配置 
+	文件: common/etc/settings.yaml	
+	需配置的模块: mongodb,redis,postgres,mobile_api_server,job_server,hippo
+
+-------------------------------------------------------
+
+mongodb:
+  host: s201		#
+  port: 27017
+  user:
+  passwd:
+  database: sns
+
+redis:
+  host: s201
+  port:
+  user:
+  passwd:
+
+postgresql:
+  host: s203
+  port: 5432
+  user: postgres
+  passwd: 111111
+
+
+mobile_api_server:
+  http:
+    host:
+    port: 16001
+    ssl: false
+    keyfile: /home/ssl/server.key
+    certfile: /home/ssl/server.crt
+  mongodb:  mongodb				#mongodb 服务
+  postgresql: postgresql		#pgsql 配置
+  redis: redis					#redis配置
+  log:
+    stdout: true
+    file: /var/api_server.log
+    dgram: localhost:9901
+  app_bind_uri: http://s205:16003/WEBAPI/connector/app-account/event/bind		# not used，kept it
+  job_server_data_analyses_uri: http://s189:16002/WEBAPI/jobserver/data/analyses # 指定jobserver的uri
+
+job_server:
+  http:
+    host:
+    port: 16002
+    ssl: false
+    keyfile: /home/ssl/server.key
+    certfile: /home/ssl/server.crt
+  log:
+    stdout: true
+    file: /var/jobserver.log
+    dgram: localhost:9900
+  mongodb:  mongodb
+  postgresql: postgresql
+  redis: redis
+  watch_time_interval: 10  									# 检查connector任务状态的定时器
+  max_job_lifetime: 10  # default is 10 hours.				# connector的任务允许最大的工作时长
+
+  callback_uri: http://s189:16002/WEBAPI/jobserver/callback		# connector数据抓取成功之后反馈到jobserver服务的uri
+
+  score_board:
+    max_life_time: 360    				# in minutes connector数据抓取有效时间，超时将重新抓取
+
+  connector_enable: false												# false - 进入调试模式，关闭connector
+  backend_service_uri:		
+    connector: http://s205:8800/desk/WEBAPI/connector					#connector服务uri
+  acs_data_analyses_uri: http://s205:12345/WEBAPI/acs/data/analysis		#acs服务uri
+
+
+hippo:
+  smtp:
+    smtp_host: smtp.163.com		#邮件发送服务器
+    smtp_port: 25				#邮件端口
+    user: 139166244				#邮件账号
+    password: runonce123		#发送口令
+    mail_from: support@51desk.cn	#邮件发送方
+
+  idenfity_image:				#验证码配置
+    key_prefix: 'sign_id_key'	#验证码生成cache的key前缀

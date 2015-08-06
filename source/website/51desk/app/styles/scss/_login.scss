@@ -1,0 +1,31 @@
+body{ background-color:#eaf1fc;}
+.container-fluid{
+	padding:0;
+}
+.login_form{
+	max-width:350px;
+	margin:0 auto;
+	padding:10px;
+	margin-top:100px;
+	.form-control{
+		border:0;
+	}
+	.btn{
+		border:0;background:#62cb31;color:#fff;
+	}
+	.has-error .form-control{
+		border:1px solid #a94442;
+	}
+}
+.login_header{
+	height:5px;
+	width:100%;
+	background:url("../images/letter.jpg"); 
+}
+.login_logo{
+	background:url("../images/logo.png");
+	width:125px;height:196px;margin-bottom:20px;
+}
+.pl0{
+	padding-left:0 !important;
+}

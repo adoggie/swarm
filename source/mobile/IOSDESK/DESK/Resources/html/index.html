@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no" />
+            <link rel="stylesheet" href="css/jquery.mobile-1.2.1.css"><link>
+                <!--<script src="js/dist/echarts-all.js"></script>-->
+                <!--<script src="js/jquery.js"></script>-->
+        <!--<script src="js/jquery.mobile-1.2.1.js"></script>-->
+        <!--<script src="js/jquery.mobile-1.2.1.min.js"></script>-->
+                <!--<script src="js/Http.js"></script>-->
+
+   <link rel="stylesheet" href="jquery.mobile-1.2.1.css"><link>
+      <script src="echarts-all.js"></script>
+      <script src="jquery.js"></script>
+      <script src="Http.js"></script>
+        <script src="jquery.mobile-1.2.1.js"></script>
+        <style>
+            .ui-fullsize .ui-btn-inner, .ui-fullsize .ui-btn-inner{
+                font-size: 13px;
+            }
+            .ui-controlgroup-horizontal .ui-controlgroup-controls{
+                display: table;margin: 0 auto;
+            }
+
+        </style>
+    </head>
+    
+    <body style="padding:0;margin:0">
+        
+        <div data-role="page" id="page">
+            <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    
+            
+            <header data-role="header" style="height:44px;background:yellowgreen; top :0;position: absolute ;width: 100%;border:none" >
+                <div style="text-align:center;line-height: 44px"> 导航区域</div>
+            </header>
+
+
+            <div id="textheader " style="margin-top: 44px;height: 135px;width: 100%;border-bottom: 1px solid #000; ">
+
+                <div id="left" style="width: 49%;height:100%;float: left ">
+                    <div style="height: 20px;font-size: 13px ;line-height: 20px;text-align: center ">Select a Data Contrast</div>
+                    <div style="height: 30px;font-size: 20px  ;line-height: 30px;text-align: center;border: 1px solid#000; width:80%;margin-left:10%;box-sizing: border-box">Sales Times</div>
+<div style=" height: 20px;line-height: 20px;text-align: center;font-size:13px"> amount</div>
+                    <div style="height: 60px ;line-height: 60px;text-align: center;font-size: 30px"> 1780</div>
+
+                </div>
+                <div id="middle" style="border-right: 1px solid #000;float: left;width: 1%;height:80%;margin-top:5%"></div>
+                <div id="right" style="width: 49%;height:100%;float: right">
+
+                    <div style="height: 50px;font-size: 15px ;line-height: 50px;text-align: center ">Salse Performance</div>
+                    <div style=" height: 20px;line-height: 20px;text-align: center;font-size:13px"> amount</div>
+                    <div style="height: 60px ;line-height: 60px;text-align: center;font-size: 30px"> 1780</div>
+
+                </div>
+
+            </div>
+
+
+            <div id="middletext " style="height:44px;width: 100%;border-bottom: 1px solid #000; ">
+
+
+                <fieldset data-role="controlgroup"  data-type="horizontal">
+<input type="radio" id="day" checked="checked"/>
+<label for="day" > Day</label>
+                    <input type="radio" id="week" />
+                    <label for="week" > Week</label>
+                    <input type="radio" id="month"/>
+                    <label for="month"> Month</label>
+                    <input type="radio" id="quarter"/>
+                    <label for="quarter"> Quarter</label>
+                </fieldset>
+
+            </div>
+
+            <!--<div style="clear: both"></div>-->
+
+            <div id="appchart" style="width:100%;"></div>
+
+            <footer data-role ="header" style="background: yellowgreen;height: 44px;bottom :0;position: absolute ;width: 100%;">
+
+                <div id="goback" style="width: 50%;line-height: 44px;float: left">返回</div>
+                <div style="width: 50%;line-height: 44px;background: grey;float: right">过滤器</div>
+            </footer>
+            
+            <script type="text/javascript">
+               
+
+                var height=window.screen.height-88-135-44-35;
+                var width=window.screen.width;
+                $("#appchart").height(height).width(width);
+                Date.prototype.format = function(format){
+                    var o = {
+                        "M+" : this.getMonth()+1, //month
+                        "d+" : this.getDate(), //day
+                        "h+" : this.getHours(), //hour
+                        "m+" : this.getMinutes(), //minute
+                        "s+" : this.getSeconds(), //second
+                        "q+" : Math.floor((this.getMonth()+3)/3), //quarter
+                        "S" : this.getMilliseconds() //millisecond
+                    }
+                    
+                    if(/(y+)/.test(format)) {
+                        format = format.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+                    }
+                    
+                    for(var k in o) {
+                        if(new RegExp("("+ k +")").test(format)) {
+                            format = format.replace(RegExp.$1, RegExp.$1.length==1 ? o[k] : ("00"+ o[k]).substr((""+ o[k]).length));
+                        }
+                    }
+                    return format;
+                }
+            
+            // 基于准备好的dom，初始化echarts图表
+
+            var myChart =  echarts.init(document.getElementById('appchart'));
+
+            var fff={};
+            
+            http.getData(fff, function(resposedata) {
+                         
+                         if(resposedata.status!=0)
+                         {
+                             alert(resposedata.errmsg);
+                             return;
+
+                         }
+                         var datastr=new Array();
+                         for(var i=0;i<resposedata['1'].key.length;i++)
+                         {
+                         var now = new Date(resposedata['1'].key[i]*1000);
+                         datastr[i]=now.format("MM-dd");
+                         
+                         }
+                         
+                         
+                         
+                         option = {
+                         
+                         dataZoom : {
+                         show : true,
+                         realtime : true,
+                         start : 0,
+                         end : 100
+                         },
+                         xAxis : [
+                                  {
+                                  type : 'category',
+                                  boundaryGap : false,
+                                  axisLine: {onZero: false},
+                                  data : datastr
+                                  }
+                                  ],
+                         yAxis : [
+                                  {
+                                  type : 'value',
+                                  max : 30
+                                  },
+                                  {
+                                  type : 'value',
+                                  max : 30
+                                  }
+                                  
+                                  ],
+                         grid:{
+                         x:50,
+                             y:10,
+                         x2:50
+                         
+                         },
+                         
+                         series : [
+                                   {
+                                   name:'流量',
+                                   type:'line',
+                                   itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                   data:resposedata['1'].value
+                                   },
+                                   {
+                                   name:'降雨量',
+                                   type:'line',
+                                   yAxisIndex:1,
+                                   itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                   data:resposedata['4'].value
+                                   }
+                                   ]
+                         };
+                         
+                         // 为echarts对象加载数据
+                         myChart.setOption(option);
+                         });
+
+                $(function(){
+                    $("#goback").on("tap",function(){
+                
+                        location.href="objc://goback";
+                    })
+                });
+                         
+                </script>
+
+        </div>
+    </body>
+    
+</html>

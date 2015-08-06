@@ -1,0 +1,84 @@
+<SNS>
+	<InterfaceDef >
+		<if id="201" name="lemon.ITerminal"/>
+		<if id="413" name="lemon.IUserEventListener"/>
+		<if id="409" name="lemon.ITerminalGatewayServer"/>
+		<if id="408" name="lemon.IMessageServer"/>
+	</InterfaceDef>
+
+	<VariantDef>
+		<var name="mq-host" value="server1"/>
+		<var name="mq-port" value="5672"/>
+		<var name="tgs1_socket_host" value="server2"/>
+		<var name="tgs1_socket_port" value="14001"/>
+		<var name="tgs1_websocket_port" value="14002"/>
+	</VariantDef>
+
+	<EndPoints>
+		<ep name="websocket_gateway_1" 	address="" type="websocket" host="{tgs1_socket_host}" port="{tgs1_websocket_port}" keyfile="" certfile=""/>
+		<ep name="socket_gateway_1" 	address="" type="socket" host="{tgs1_socket_host}" port="{tgs1_socket_port}" keyfile="" certfile=""/>
+		<ep name="mq_gateway_1" 	address="mq_gateway_1;{create:always,node:{type:queue,durable:true}}" type="qpid" host="{mq-host}" port="{mq-port}"/>
+		<ep name="mq_messageserver" 	address="mq_messageserver;{create:always,node:{type:queue,durable:true}}" type="qpid" host="{mq-host}" port="{mq-port}"/>
+		<ep name="mq_webserver" 		address="mq_webserver;{create:always,node:{type:queue,durable:true}}" type="qpid" host="{mq-host}" port="{mq-port}"/>
+		<ep name="mq_user_event_listener" 		address="mq_user_event_listener;{create:always,node:{type:topic,durable:true}}" type="qpid" host="{mq-host}" port="{mq-port}"/>
+		<ep name="mq_gateway_broadcast" 		address="mq_gateway_broadcast;{create:always,node:{type:topic,durable:true}}" type="qpid" host="{mq-host}" port="{mq-port}"/>
+	</EndPoints>
+
+
+	<servers>
+		<server name="gwserver" >
+			<route if="lemon.IMessageServer">
+				<call in="websocket_gateway_1" out="mq_messageserver" />
+				<return in="mq_gateway_1" out="websocket_gateway_1" />
+			</route>
+
+
+			<route if="lemon.ITerminal">
+				<call in="mq_gateway_broadcast" out="websocket_gateway_1"/>
+				<call in="mq_gateway_1" out="websocket_gateway_1"/>
+			</route>
+
+			<extra_mqs ins="mq_gateway_broadcast" outs="mq_user_event_listener"/>
+			<properties>
+				<property name="userid_check" value="true"/>
+			</properties>
+		</server>
+
+
+		<server name="mexs">
+			<extra_mqs ins="mq_messageserver,mq_user_event_listener"
+			           outs="mq_gateway_1"/>
+			<properties>
+			</properties>
+		</server>
+
+		<server name="lemon_server">
+			<extra_mqs ins="mq_webserver" outs="mq_messageserver"/>
+			<properties>
+			</properties>
+		</server>
+
+		<server name="gwserver2" >
+			<route if="lemon.IMessageServer">
+				<call in="socket_gateway_1" out="mq_messageserver" />
+				<return in="mq_gateway_1" out="socket_gateway_1" />
+			</route>
+
+
+			<route if="lemon.ITerminal">
+				<call in="mq_gateway_broadcast" out="socket_gateway_1"/>
+				<call in="mq_gateway_1" out="socket_gateway_1"/>
+			</route>
+
+			<extra_mqs ins="mq_gateway_broadcast" outs="mq_user_event_listener"/>
+			<properties>
+				<property name="userid_check" value="true"/>
+			</properties>
+		</server>
+
+
+
+
+	</servers>
+
+</SNS>

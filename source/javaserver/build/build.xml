@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="compile" name="testSvn">
+	<!--http://subclipse.tigris.org/svnant.html  需要svnant插件地址-->
+	<!-- 关于svn属性的定义在build.properties --> 
+	<property file="build.properties" /> 
+	<property file="build.properties" /> 
+	<!-- path to the svnant libraries. Usually they will be located in ANT_HOME/lib -->
+	<path id="build.classpath">
+		<fileset dir="${svnantlib.dir}">
+		  <include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="${javalib.dir}">
+		  <include name="**/*.jar"/>
+		</fileset>
+	 </path> 
+	
+	<!-- load the svn task 加载SVN的jar包，使他可以调用系统的svn命令-->
+	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
+	<!-- 设置svn相关属性 从svnant1.3.2以后必须使用svnSetting来设置svn的属性即用户名和密码等 -->  
+    <svnSetting id="svn.setting" svnkit="true" username="${innofund.repository.user}" password="${innofund.repository.passwd}"  javahl="false" />
+
+	<target name="clean">
+		<description>删除生成的项目文件夹</description>
+		<delete dir="${dest.name}" />
+		<delete dir="${project.name}" />
+		<delete dir="${tmp.classes}" />
+	</target>
+
+	<target name="checkoutProject" depends="clean">
+		<description>检出新项目含svn信息，经过试验没有发现有svn相关信息</description>
+		<echo message="从svn${innofund.url}检出代码开始checkoutProject.." />
+		<svn refid="svn.setting">
+		  <checkout url="${innofund.url}" revision="HEAD" destPath="${dest.name}" />
+		</svn>
+		<echo message="从svn${innofund.url}检出代码完成" />
+	 </target>
+
+	<target name="prebuild" depends="exportProject">
+		 <copy todir="${project.name}">
+			 <fileset dir="${dest.name}/webapp/" includes="**/*" />
+		 </copy>
+	</target>
+
+
+	<target name="compile" depends="prebuild">
+		<echo message="开始编译...${tmp.classes}" />
+		<mkdir dir="${tmp.classes}"/>
+		<javac srcdir="${dest.name}/source" destdir="${tmp.classes}" classpathref="build.classpath" includeantruntime="on"></javac>
+		
+		<echo message="复制配置文件..." />
+		<copy todir="${tmp.classes}">
+			<fileset dir="${dest.name}/source/" includes="**/*.xml" />
+		</copy>
+		<copy todir="${tmp.classes}">
+			<fileset dir="${dest.name}/source/" includes="**/*.properties" />
+		</copy>
+		
+		<mkdir dir="${tmp.classes}/cn/fx/desk/mapper/xml/"/>
+		<copy todir="${tmp.classes}/cn/fx/desk/mapper/xml/">
+			<fileset dir="${dest.name}/source/cn/fx/desk/mapper/xml/" includes="**/*.xml" />
+		</copy>
+
+		<copy todir="${project.name}/WEB-INF/classes/">
+			 <fileset dir="${tmp.classes}" includes="**/*" />
+		 </copy>
+	</target>
+	<target name="exportProject" depends="clean">
+		<description>导出新项目没有svn信息</description>
+		<echo message="从svn${innofund.url}导出代码开始exportProject..." />
+		<svn refid="svn.setting">
+		  <export srcUrl="${innofund.url}" revision="HEAD" destPath="${dest.name}" force="true"/>
+		</svn>
+		<echo message="从svn${innofund.url}导出代码完成" />
+	 </target>
+
+
+	
+	
+</project>

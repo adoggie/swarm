@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias alias="orgUserLogin" type="cn.fx.desk.entity.OrgUserLogin" />
+		<typeAlias alias="orgUserAppConfig" type="cn.fx.desk.entity.OrgUserAppConfig" />
+		<typeAlias alias="apTables" type="cn.fx.desk.entity.ApTables" />
+		<typeAlias alias="apTablesTime" type="cn.fx.desk.entity.ApTablesTime" />
+	</typeAliases>
+	<mappers>
+		<mapper resource="cn/fx/desk/mapper/xml/YhMapper.xml" />
+		<mapper resource="cn/fx/desk/mapper/xml/OrgUserAppConfigMapper.xml" />	
+		<mapper resource="cn/fx/desk/mapper/xml/ApTablesMapper.xml" />
+	</mappers>
+</configuration>		
