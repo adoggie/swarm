@@ -38,3 +38,8 @@ class X:
 
 def scope_lock(lock=None):
 	pass
+
+
+def random_password(maxlen=10):
+	import string,random
+	return ''.join([random.choice(string.digits + string.letters) for i in range(0, maxlen)])
